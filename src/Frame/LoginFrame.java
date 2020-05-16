@@ -8,20 +8,28 @@ import Service.UserService;
 import Utils.MusicUtil;
 
 import javax.swing.*;
+import javax.swing.event.MouseInputAdapter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
+import java.awt.event.*;
 
 public class LoginFrame extends JFrame {
     private  JTextField name=new JTextField("请输入账号",15);
     private  JPasswordField password=new JPasswordField("请输入密码",15);
-    private  JButton  submit=new JButton("登陆");
-    private  JButton registration=new JButton("注册");
+    private JLabel submitLabel;
+    private JLabel register;
+
 
     public LoginFrame(String title) throws HeadlessException {
         super(title);
+        //play the music and avoid load too much music file
+        if (Data.backgroundMusic==null){
+            Data.backgroundMusic=new MusicUtil();
+            Data.backgroundMusic.loadMusic("static/music/bg_music_1.wav");
+            Data.backgroundMusic.play();
+        }
+
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
         //load a picture
         ImageIcon ico=new ImageIcon("static/image/map/bg_sky_with_logo.jpg");
         // initialize a label by ImageIcon
@@ -91,12 +99,14 @@ public class LoginFrame extends JFrame {
 
         //add the button
         JPanel subPanel=new JPanel();
-        subPanel.add(submit);
-        subPanel.add(registration);
-        submit.setSize(65,35);
-        registration.setSize(65,35);
-        subPanel.setBounds(Data.width/4+30,927/3+100,200,200);
+        submitLabel=new JLabel(new ImageIcon("static/image/icon/confirm.png"));
+        register=new JLabel(new ImageIcon("static/image/icon/register.png"));
+        subPanel.add(submitLabel);
+        subPanel.add(register);
+
+        subPanel.setBounds(Data.width/4-20,927/3+100,300,200);
         subPanel.setOpaque(false);
+
 
         //add the items into the container
         container.add(namePanel);
@@ -112,10 +122,11 @@ public class LoginFrame extends JFrame {
         //able to see
         this.setVisible(true);
 
-        //bind the submit to a action
-        submit.addActionListener(new ActionListener() {
+        //to bind the submit picture to click event
+        submitLabel.addMouseListener(new MouseInputAdapter() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
                 //get the content of the textField
                 String account=name.getText();
                 String passwordString= String.valueOf(password.getPassword());
@@ -133,10 +144,10 @@ public class LoginFrame extends JFrame {
                 }
             }
         });
-
-        registration.addActionListener(new ActionListener() {
+        register.addMouseListener(new MouseInputAdapter() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
                 RegisterFrame registerFrame=new RegisterFrame("注册");
                 LoginFrame.this.dispose();
             }

@@ -19,9 +19,9 @@ public class MainFrame extends JFrame {
         this.setTitle(title);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setBounds(Data.x,Data.y,Data.width,Data.height);
-
         //set unable to change the size
         this.setResizable(false);
+        Data.backgroundMusic.changeMusic("static/music/bgm_3.wav");
 
         ImageIcon icon=new ImageIcon("static/image/map/bg_river.jpg");
         JLabel mainBackground=new JLabel(icon);

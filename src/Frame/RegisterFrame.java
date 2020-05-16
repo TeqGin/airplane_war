@@ -5,16 +5,16 @@ import Service.UserService;
 import Dialog.TripsDialog;
 
 import javax.swing.*;
+import javax.swing.event.MouseInputAdapter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
+import java.awt.event.*;
 
 public class RegisterFrame extends JFrame {
     private  JTextField account=new JTextField("请输入账号",15);
     private  JPasswordField passwordField=new JPasswordField("请输入密码",15);
     private  JPasswordField passwordFieldToConfirm=new JPasswordField("请再次输入密码",15);
+    private JLabel submitLabel;
+    private JLabel backLabel;
     private  JButton submit=new JButton("提交");
     private  JButton back=new JButton("返回");
 
@@ -22,6 +22,8 @@ public class RegisterFrame extends JFrame {
     public RegisterFrame(String title) throws HeadlessException {
         super(title);
         this.setTitle(title);
+        //make the program stop after you click exit
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //load the background picture
         ImageIcon bgIco=new ImageIcon("static/image/map/bg_sky_with_logo.jpg");
         JLabel bgLabel=new JLabel(bgIco);
@@ -29,6 +31,7 @@ public class RegisterFrame extends JFrame {
         bgLabel.setBounds(0,0, Data.width,Data.height);
         this.getLayeredPane().add(bgLabel,new Integer(Integer.MIN_VALUE));
 
+        //get the container
         JPanel container=(JPanel) this.getContentPane();
         container.setOpaque(false);
 
@@ -128,15 +131,18 @@ public class RegisterFrame extends JFrame {
 
         //add a button Panel
         JPanel subPanel =new JPanel();
-        subPanel.add(submit);
-        subPanel.add(back);
-        subPanel.setBounds(Data.width/4+20,927/3+150,250,30);
+        submitLabel=new JLabel(new ImageIcon("static/image/icon/confirm.png"));
+        backLabel=new JLabel(new ImageIcon("static/image/icon/cancel.png"));
+        subPanel.add(submitLabel);
+        subPanel.add(backLabel);
+        subPanel.setBounds(Data.width/4-20,927/3+150,300,50);
         subPanel.setOpaque(false);
 
         //bind the submit button to click event
-        submit.addActionListener(new ActionListener() {
+        submitLabel.addMouseListener(new MouseInputAdapter() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
                 String accountString=account.getText();
                 String passwordString=String.valueOf(passwordField.getPassword());
                 String passwordToConfirmString=String.valueOf(passwordFieldToConfirm.getPassword());
@@ -147,20 +153,22 @@ public class RegisterFrame extends JFrame {
                     tripsDialog.setVisible(true);
 
                 }else {
-                       TripsDialog tripsDialog=new TripsDialog(RegisterFrame.this,"提示","账号或密码出错！，请注意账号和密码不能为空");
-                       tripsDialog.setVisible(true);
+                    TripsDialog tripsDialog=new TripsDialog(RegisterFrame.this,"提示","账号或密码出错！，请注意账号和密码不能为空");
+                    tripsDialog.setVisible(true);
                 }
             }
         });
 
         //bind the back button to the click event
-        back.addActionListener(new ActionListener() {
+        backLabel.addMouseListener(new MouseInputAdapter() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
                 LoginFrame loginFrame=new LoginFrame("登陆界面");
                 RegisterFrame.this.dispose();
             }
         });
+
 
 
 

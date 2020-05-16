@@ -1,5 +1,7 @@
 package Utils;
 
+import com.sun.scenario.effect.impl.prism.PrImage;
+
 import javax.sound.midi.Sequence;
 import javax.sound.sampled.*;
 import java.applet.Applet;
@@ -14,20 +16,46 @@ public class MusicUtil {
     private SourceDataLine sourceDataLine;
     private DataLine.Info info;
     private AudioInputStream audioInputStream;
+    private File file;
+    private Clip clip;
 
+
+    //only can load .wav file
     public void loadMusic(String address){
+        file=new File(address);
         try {
-            audioInputStream=AudioSystem.getAudioInputStream(new URL(address));
+            audioInputStream=AudioSystem.getAudioInputStream(file);
             audioFormat=audioInputStream.getFormat();
-            info=new DataLine.Info(SourceDataLine.class,audioFormat);
-            sourceDataLine=(SourceDataLine)AudioSystem.getLine(info);
         } catch (UnsupportedAudioFileException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (LineUnavailableException e) {
+        }
+    }
+    public void play(){
+        info=new DataLine.Info(Clip.class,audioFormat);
+        try {
+            clip=(Clip)AudioSystem.getLine(info);
+            clip.open(audioInputStream);
+            clip.start();
+            clip.loop(Integer.MAX_VALUE);
+        } catch (LineUnavailableException | IOException e) {
             e.printStackTrace();
         }
+    }
+    public void stop(){
+
+        if (clip!=null) {
+            clip.stop();
+        }
+    }
+    public boolean isActive(){
+        return clip.isActive();
+    }
+    public void changeMusic(String address){
+        clip.stop();
+        loadMusic(address);
+        play();
     }
 
 }
