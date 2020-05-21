@@ -1,9 +1,9 @@
 package Frame;
 
-import Dao.UserDao;
+
 import Domain.Data;
-import Domain.User;
 import Dialog.TripsDialog;
+import Domain.User;
 import Service.UserService;
 import Utils.MusicUtil;
 
@@ -12,6 +12,10 @@ import javax.swing.event.MouseInputAdapter;
 import java.awt.*;
 import java.awt.event.*;
 
+/**
+ * @author 许达峰
+ * @time 2020.5.14
+ * */
 public class LoginFrame extends JFrame {
     private  JTextField name=new JTextField("请输入账号",15);
     private  JPasswordField password=new JPasswordField("请输入密码",15);
@@ -47,7 +51,7 @@ public class LoginFrame extends JFrame {
         //使容器透明
         container.setOpaque(false);
 
-        //add the account text
+        //add the account filed
         JPanel namePanel=new JPanel();
         namePanel.setLayout(new FlowLayout());
         namePanel.add(new JLabel("账号"));
@@ -59,7 +63,9 @@ public class LoginFrame extends JFrame {
             @Override
             public void focusGained(FocusEvent e) {
                 super.focusGained(e);
-                name.setText("");
+                if (name.getText().equals("请输入账号")){
+                    name.setText("");
+                }
             }
             @Override
             public void focusLost(FocusEvent e) {
@@ -83,8 +89,10 @@ public class LoginFrame extends JFrame {
             @Override
             public void focusGained(FocusEvent e) {
                 super.focusGained(e);
-                password.setEchoChar('*');
-                password.setText("");
+                if (String.valueOf(password.getPassword()).equals("请输入密码")){
+                    password.setEchoChar('*');
+                    password.setText("");
+                }
             }
 
             @Override
@@ -132,6 +140,9 @@ public class LoginFrame extends JFrame {
                 String passwordString= String.valueOf(password.getPassword());
 
                 if (UserService.isExist(account,passwordString)){
+                    //record the account and password
+                    Data.user=UserService.findUserById(account);
+
                     MainFrame mainFrame=new MainFrame("雷霆战机");
                     mainFrame.setVisible(true);
                     //destroy the login interface by use the outer-this

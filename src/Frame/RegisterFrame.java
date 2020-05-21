@@ -9,6 +9,10 @@ import javax.swing.event.MouseInputAdapter;
 import java.awt.*;
 import java.awt.event.*;
 
+/**
+ * @author 许达峰
+ * @time 2020.5.14
+ * */
 public class RegisterFrame extends JFrame {
     private  JTextField account=new JTextField("请输入账号",15);
     private  JPasswordField passwordField=new JPasswordField("请输入密码",15);
@@ -168,10 +172,6 @@ public class RegisterFrame extends JFrame {
                 RegisterFrame.this.dispose();
             }
         });
-
-
-
-
         container.add(accountPanel);
         container.add(passwordPanel);
         container.add(passwordToConfirmPanel);

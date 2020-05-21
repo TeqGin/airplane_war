@@ -1,13 +1,17 @@
 package Frame;
 
 import Domain.Data;
+import Canvas.MapCanvas;
 
 import javax.swing.*;
-import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
 import javax.swing.event.MouseInputAdapter;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+
+/**
+ * @author 许达峰
+ * @time 2020.5.14
+ * */
 
 public class MainFrame extends JFrame {
     private JButton exit=new JButton("退出当前帐号");
@@ -27,6 +31,8 @@ public class MainFrame extends JFrame {
         JLabel mainBackground=new JLabel(icon);
         mainBackground.setBounds(0,0,Data.width,Data.height);
         this.getLayeredPane().add(mainBackground,new Integer(Integer.MIN_VALUE));
+
+
 
         //get the contain
         JPanel container=(JPanel) this.getContentPane();

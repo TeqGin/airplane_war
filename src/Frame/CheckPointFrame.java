@@ -6,6 +6,10 @@ import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+/**
+ * @author 许达峰
+ * @time 2020.5.15
+ * */
 
 public class CheckPointFrame extends JFrame {
     private JLabel level1;
@@ -17,7 +21,7 @@ public class CheckPointFrame extends JFrame {
         //set unable to change the size
         this.setResizable(false);
 
-        JLabel background=new JLabel(new ImageIcon("static/image/map/bg_valley.jpg"));
+        JLabel background=new JLabel(new ImageIcon("static/image/map/bg_planet.jpg"));
         background.setBounds(0,0,Data.width,Data.height);
         this.getLayeredPane().add(background,new Integer(Integer.MIN_VALUE));
 
