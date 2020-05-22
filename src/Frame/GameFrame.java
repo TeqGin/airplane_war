@@ -29,25 +29,16 @@ public class GameFrame extends JFrame {
         //draw  all images
         drawCanvas();
 
-        this.addWindowFocusListener(new WindowFocusListener() {
-            @Override
-            public void windowGainedFocus(WindowEvent e) {
-                mapCanvas.go();
-            }
-            @Override
-            public void windowLostFocus(WindowEvent e) {
-                TripsDialog dialog=new TripsDialog(GameFrame.this,"提示","游戏暂停");
-                mapCanvas.stop();
-                dialog.setVisible(true);
-            }
-        });
 
         this.setVisible(true);
     }
     //to show the Canvas
     private void drawCanvas(){
         //add an instance of mapCanvas
-        mapCanvas =new MapCanvas("static/image/map/bg_plain.jpg");
+        mapCanvas =new MapCanvas("static/image/map/bg_plain.jpg",this);
+        mapCanvas.setUserPlaneAddress("static/image/plane/user_plane_level1.png");
+        mapCanvas.setUserPlaneBulletsAddress("static/image/bullet/bullet_02.png");
+        mapCanvas.init();
         add(mapCanvas);
         new Thread(mapCanvas).start();
     }

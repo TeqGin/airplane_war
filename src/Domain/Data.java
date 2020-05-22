@@ -17,6 +17,8 @@ public class Data {
     public static MusicUtil backgroundMusic;
     public static MusicUtil backgroundMusic2=new MusicUtil();
     public static int speed=30;
-    public static int enemyNumber=3;
+    public static int enemyNumber=2;
     public static int score=0;
+
+    public static boolean gameRunning=true;
 }
