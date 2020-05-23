@@ -38,5 +38,6 @@ public class TripsDialog extends JDialog  {
             }
         });
         container.add(sure);
+        this.setVisible(true);
     }
 }

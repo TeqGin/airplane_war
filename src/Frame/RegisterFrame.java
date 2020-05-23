@@ -153,12 +153,12 @@ public class RegisterFrame extends JFrame {
 
                 if (UserService.isLegal(accountString,passwordString,passwordToConfirmString)){
                     UserService.addUser(accountString,passwordString);
-                    TripsDialog tripsDialog=new TripsDialog(RegisterFrame.this,"提示","注册成功！");
-                    tripsDialog.setVisible(true);
+                    JOptionPane.showMessageDialog(null,"注册成功!","提示",JOptionPane.INFORMATION_MESSAGE);
+                    RegisterFrame.this.dispose();
+                    LoginFrame loginFrame=new LoginFrame("注册界面");
 
                 }else {
-                    TripsDialog tripsDialog=new TripsDialog(RegisterFrame.this,"提示","账号或密码出错！，请注意账号和密码不能为空");
-                    tripsDialog.setVisible(true);
+                    JOptionPane.showMessageDialog(null,"账号已存在或账号密码输入错误.\n请注意不要输入空值!","提示",JOptionPane.INFORMATION_MESSAGE);
                 }
             }
         });

@@ -144,14 +144,10 @@ public class LoginFrame extends JFrame {
                     Data.user=UserService.findUserById(account);
 
                     MainFrame mainFrame=new MainFrame("雷霆战机");
-                    mainFrame.setVisible(true);
                     //destroy the login interface by use the outer-this
                     LoginFrame.this.dispose();
                 }else {
-                    TripsDialog dialog=new TripsDialog(LoginFrame.this,"提示","账号或密码错误!");
-                    //set the relative location
-                    dialog.setLocationRelativeTo(null);
-                    dialog.setVisible(true);
+                    JOptionPane.showMessageDialog(null,"账号或密码错误!","提示",JOptionPane.INFORMATION_MESSAGE);
                 }
             }
         });

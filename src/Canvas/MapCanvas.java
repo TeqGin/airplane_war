@@ -3,6 +3,7 @@ package Canvas;
 import Domain.*;
 import Utils.MusicUtil;
 import Dialog.TripsDialog;
+import Frame.SettlementFrame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -51,8 +52,9 @@ public class MapCanvas extends Canvas implements Runnable {
             }
             numberIcons.add(numberIcon);
         }
-
+        //reset the score
         Data.score=0;
+
         this.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -71,13 +73,16 @@ public class MapCanvas extends Canvas implements Runnable {
 
         this.setBounds(0,0,Data.width,Data.height);
     }
-    public void init(){
+
+    public void reset(){
         initUserPlane();
     }
+
     public void initUserPlane(){
         userPlane=new UserPlane(225,500,userPlaneAddress,userPlaneBulletsAddress);
         userPlane.adapt(this);
     }
+
     public void setSpeed(int speed){
         Data.speed=speed;
     }
@@ -180,6 +185,10 @@ public class MapCanvas extends Canvas implements Runnable {
                     Data.score+=100;
                     if (Data.score==5000){
                         Data.speed/=2;
+                        Data.enemyNumber+=1;
+                    }
+                    if(Data.score==Data.targetScore){
+                        Data.enemyNumber=1;
                     }
                     break;
                 }
@@ -194,11 +203,7 @@ public class MapCanvas extends Canvas implements Runnable {
                     new Rectangle(userPlane.getX(),userPlane.getY(),userPlane.getWidth(),userPlane.getHeight())
             )
             ){
-                playMusic("static/music/bloom.wav");
-                userPlane.setAlive(false);
-                running=false;
-                TripsDialog tripsDialog=new TripsDialog(jFrame,"提示","游戏结束！");
-                tripsDialog.setVisible(true);
+                gameFailure();
             }
         }
 
@@ -210,14 +215,20 @@ public class MapCanvas extends Canvas implements Runnable {
                 if (new Rectangle(userPlane.getX(),userPlane.getY(),userPlane.getWidth(),userPlane.getHeight()).intersects(
                         new Rectangle(enemyBullets.get(j).getX(),enemyBullets.get(j).getY(),enemyBullets.get(j).getWidth(),enemyBullets.get(j).getHeight())
                 )){
-                    playMusic("static/music/bloom.wav");
-                    userPlane.setAlive(false);
-                    running=false;
-                    TripsDialog tripsDialog=new TripsDialog(jFrame,"提示","游戏结束！");
-                    tripsDialog.setVisible(true);
+                    gameFailure();
                 }
             }
         }
+    }
+
+    private void gameFailure(){
+        playMusic("static/music/bloom.wav");
+        userPlane.setAlive(false);
+        stop();
+        playMusic("static/music/game_over.wav");
+        JOptionPane.showMessageDialog(null,"游戏结束!","提示",JOptionPane.INFORMATION_MESSAGE);
+        jFrame.dispose();
+        SettlementFrame settlementFrame =new SettlementFrame("结算面板","static/image/map/settlement_failure.png");
     }
 
     private void playMusic(String address){
@@ -230,6 +241,13 @@ public class MapCanvas extends Canvas implements Runnable {
     public void run() {
         while(running){
             move();
+            if (enemyPlanes.size()==0&&Data.score>=Data.targetScore){
+                playMusic("static/music/victory.wav");
+                JOptionPane.showMessageDialog(null,"恭喜通关!","提示",JOptionPane.INFORMATION_MESSAGE);
+                stop();
+                jFrame.dispose();
+                SettlementFrame settlementFrame =new SettlementFrame("结算面板","static/image/map/settlement_success.png");
+            }
             try {
                 Thread.sleep(Data.speed);
             } catch (InterruptedException e) {
@@ -275,5 +293,9 @@ public class MapCanvas extends Canvas implements Runnable {
 
     public void setUserPlaneBulletsAddress(String userPlaneBulletsAddress) {
         this.userPlaneBulletsAddress = userPlaneBulletsAddress;
+    }
+
+    public void setTargetScore(int targetScore){
+        Data.targetScore=targetScore;
     }
 }

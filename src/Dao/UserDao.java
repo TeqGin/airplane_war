@@ -59,4 +59,17 @@ public class UserDao {
             DButil.closeDBResources();
         }
     }
+    public static void update(User user){
+        String sql="update user set coin=? where account=?";
+        PreparedStatement statement=DButil.getPreparedStatement(sql);
+        try {
+            statement.setInt(1,user.getCoin());
+            statement.setString(2,user.getName());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            DButil.closeDBResources();
+        }
+    }
 }

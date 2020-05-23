@@ -28,6 +28,10 @@ public class UserService {
             return true;
         }
     }
+    public static void update(User user){
+        UserDao.update(user);
+    }
+
     public static void addUser(String account,String password){
         UserDao.addUser(account,password);
     }

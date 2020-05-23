@@ -16,6 +16,9 @@ import java.awt.event.*;
 
 public class GameFrame extends JFrame {
     private MapCanvas mapCanvas;
+    private String mapAddress;
+    private String userPlaneAddress;
+    private String userPlaneBulletAddress;
 
     public GameFrame(String title) throws HeadlessException {
         super(title);
@@ -25,21 +28,32 @@ public class GameFrame extends JFrame {
         this.setResizable(false);
         //change music
         Data.backgroundMusic.changeMusic("static/music/bgm_music_2.wav");
-
-        //draw  all images
-        drawCanvas();
-
-
         this.setVisible(true);
     }
+
     //to show the Canvas
     private void drawCanvas(){
         //add an instance of mapCanvas
-        mapCanvas =new MapCanvas("static/image/map/bg_plain.jpg",this);
-        mapCanvas.setUserPlaneAddress("static/image/plane/user_plane_level1.png");
-        mapCanvas.setUserPlaneBulletsAddress("static/image/bullet/bullet_02.png");
-        mapCanvas.init();
+        mapCanvas =new MapCanvas(mapAddress,this);
+        mapCanvas.setUserPlaneAddress(userPlaneAddress);
+        mapCanvas.setUserPlaneBulletsAddress(userPlaneBulletAddress);
+        mapCanvas.reset();
         add(mapCanvas);
         new Thread(mapCanvas).start();
+    }
+    public void initCanvas(){
+        //draw  all images
+        drawCanvas();
+    }
+    public void setMapAddress(String mapAddress) {
+        this.mapAddress = mapAddress;
+    }
+
+    public void setUserPlaneAddress(String userPlaneAddress) {
+        this.userPlaneAddress = userPlaneAddress;
+    }
+
+    public void setUserPlaneBulletAddress(String userPlaneBulletAddress) {
+        this.userPlaneBulletAddress = userPlaneBulletAddress;
     }
 }
