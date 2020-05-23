@@ -24,13 +24,18 @@ public class Data {
 
     public static int score=0;
     public static int targetScore=10000;
+    public static int enemyType=2;
+    public static int enemyBulletType=2;
+
+    public static long enterTime;
+    public static long duration=30000;
 
     public static float proportion =0.5f;
 
     public static boolean gameRunning=true;
+    public static boolean hasBoos=false;
 
     public static String mapAddress="static/image/map/bg_plain.jpg";
-    public static String userPlaneAddress="static/image/plane/user_plane_level1.png";
-    public static String userPlaneBulletAddress="static/image/bullet/bullet_2_blue.png";
-
+    public static String userPlaneAddress="static/image/plane/user_plane_1.png";
+    public static String userPlaneBulletAddress="static/image/bullet/user_bullet_0.png";
 }

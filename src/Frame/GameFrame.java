@@ -19,6 +19,8 @@ public class GameFrame extends JFrame {
     private String mapAddress;
     private String userPlaneAddress;
     private String userPlaneBulletAddress;
+    private String boosPlaneAddress;
+    private String boosPlaneBulletAddress;
 
     public GameFrame(String title) throws HeadlessException {
         super(title);
@@ -37,6 +39,8 @@ public class GameFrame extends JFrame {
         mapCanvas =new MapCanvas(mapAddress,this);
         mapCanvas.setUserPlaneAddress(userPlaneAddress);
         mapCanvas.setUserPlaneBulletsAddress(userPlaneBulletAddress);
+        mapCanvas.setBoosPlaneAddress(boosPlaneAddress);
+        mapCanvas.setBoosPlaneBulletAddress(boosPlaneBulletAddress);
         mapCanvas.reset();
         add(mapCanvas);
         new Thread(mapCanvas).start();
@@ -55,5 +59,12 @@ public class GameFrame extends JFrame {
 
     public void setUserPlaneBulletAddress(String userPlaneBulletAddress) {
         this.userPlaneBulletAddress = userPlaneBulletAddress;
+    }
+    public void setBoosPlaneAddress(String boosPlaneAddress) {
+        this.boosPlaneAddress = boosPlaneAddress;
+    }
+
+    public void setBoosPlaneBulletAddress(String boosPlaneBulletAddress) {
+        this.boosPlaneBulletAddress = boosPlaneBulletAddress;
     }
 }

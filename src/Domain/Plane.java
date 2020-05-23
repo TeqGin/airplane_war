@@ -19,7 +19,7 @@ public class Plane extends Rectangle{
     private String address;
     private String bulletAddress;
 
-    private int step=7;
+    private int step=5;
 
 
     public Plane(int x, int y, String address,String bulletAddress) {

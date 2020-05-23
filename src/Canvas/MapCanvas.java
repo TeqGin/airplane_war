@@ -25,9 +25,12 @@ public class MapCanvas extends Canvas implements Runnable {
     private MyMap map1,map2;
     private UserPlane userPlane;
     private ArrayList<EnemyPlane> enemyPlanes=new ArrayList<EnemyPlane>();
+    private BoosPlane boosPlane;
     private JFrame jFrame;
     private String userPlaneAddress;
     private String userPlaneBulletsAddress;
+    private String boosPlaneAddress;
+    private String boosPlaneBulletAddress;
 
     //instance double buffer 实现双缓冲
     private Image iBuffer;
@@ -41,8 +44,7 @@ public class MapCanvas extends Canvas implements Runnable {
         map1=new MyMap(this.MapAddress,0,0);
         map2=new MyMap(this.MapAddress,0,-Data.height);
         //user plane
-        enemyPlanes.add(new EnemyPlane("static/image/plane/plane_level1_enemy_1.png","static/image/bullet/bullet_enemy_1_blue.png"));
-
+        enemyPlanes.add(new EnemyPlane("static/image/plane/enemy_0.png","static/image/bullet/enemy_bullet_1.png"));
         //initialize numbers
         for (int i = 0; i < 10 ; i++) {
             NumberIcon numberIcon=new NumberIcon("static/image/number/number_"+i+".png");
@@ -75,13 +77,14 @@ public class MapCanvas extends Canvas implements Runnable {
     }
 
     public void reset(){
-        initUserPlane();
+
+        userPlane=new UserPlane(225,500,userPlaneAddress,Data.userPlaneBulletAddress);
+        userPlane.adapt(this);
+        //boos plane
+        boosPlane=new BoosPlane(0,0,boosPlaneAddress,boosPlaneBulletAddress);
+        Data.enterTime=System.currentTimeMillis();
     }
 
-    public void initUserPlane(){
-        userPlane=new UserPlane(225,500,userPlaneAddress,userPlaneBulletsAddress);
-        userPlane.adapt(this);
-    }
 
     public void setSpeed(int speed){
         Data.speed=speed;
@@ -105,6 +108,18 @@ public class MapCanvas extends Canvas implements Runnable {
 
         //draw user bullets
         userPlane.drawBullet(gBuffer,this);
+
+        if (Data.hasBoos&&System.currentTimeMillis()-Data.enterTime>=Data.duration&&boosPlane.isAlive()) {
+            Data.enemyNumber=1;
+            gBuffer.drawImage(boosPlane.getPlanePicture(),boosPlane.getX(),boosPlane.getY(),this);
+            for (int i = 0; i <boosPlane.bullets.size() ; i++) {
+                for (int j = 0; j < boosPlane.bullets.get(i).size(); j++) {
+                    Bullet bullet=boosPlane.bullets.get(i).get(j);
+                    gBuffer.drawImage(bullet.getBulletImage(),bullet.getX(),bullet.getY(),this);
+                }
+            }
+        }
+
         //draw enemy plane
         for (int i=0;i<enemyPlanes.size();i++){
             enemyPlanes.get(i).draw(gBuffer,this);
@@ -149,6 +164,10 @@ public class MapCanvas extends Canvas implements Runnable {
             enemyPlanes.get(i).bulletMove();
         }
         enemyMove();
+
+        boosPlane.bulletMove();
+        boosPlane.planeMove();
+
         repaint();
     }
 
@@ -164,7 +183,8 @@ public class MapCanvas extends Canvas implements Runnable {
         long appearInterval=400;
         if (enemyPlanes.size() == 0 || now_time - enemyPlanes.get(enemyPlanes.size() - 1).getAppearTime() >= appearInterval) {
             for (int i = 0; i <new Random().nextInt(Data.enemyNumber) ; i++) {
-                enemyPlanes.add(new EnemyPlane("static/image/plane/plane_level1_enemy_1.png","static/image/bullet/bullet_enemy_1_blue.png"));
+                int r=new Random().nextInt(Data.enemyBulletType);
+                enemyPlanes.add(new EnemyPlane("static/image/plane/enemy_"+new Random().nextInt(Data.enemyType)+".png","static/image/bullet/enemy_bullet_"+r+".png"));
             }
         }
     }
@@ -219,6 +239,40 @@ public class MapCanvas extends Canvas implements Runnable {
                 }
             }
         }
+
+        if (Data.hasBoos&&System.currentTimeMillis()-Data.enterTime>=Data.duration&&boosPlane.isAlive()){
+            if (new Rectangle(boosPlane.getX(),boosPlane.getY(),boosPlane.getWidth(),boosPlane.getHeight()).intersects(
+                    new Rectangle(userPlane.getX(),userPlane.getY(),userPlane.getWidth(),userPlane.getHeight()
+            ))){
+                gameFailure();
+            }
+            for (int i = 0; i < boosPlane.bullets.size(); i++) {
+                for (int j = 0; j <boosPlane.bullets.get(i).size() ; j++) {
+                    Bullet bullet=boosPlane.bullets.get(i).get(j);
+                    if (new Rectangle(userPlane.getX(),userPlane.getY(),userPlane.getWidth(),userPlane.getHeight()).intersects(
+                            new Rectangle(bullet.getX(),bullet.getY(),bullet.getWidth(),bullet.getHeight())
+                    )){
+                        gameFailure();
+                    }
+                }
+            }
+            userBullets=userPlane.getUserBullets();
+            for (int i = 0; i <userBullets.size() ; i++) {
+                if (new Rectangle(userBullets.get(i).getX(),userBullets.get(i).getY(),userBullets.get(i).getWidth(),userBullets.get(i).getHeight()).intersects(
+                        new Rectangle(boosPlane.getX(),boosPlane.getY(),boosPlane.getWidth(),boosPlane.getHeight())
+                )
+                ){
+                    playMusic("static/music/bloom.wav");
+                    userBullets.get(i).setExist(false);
+                    boosPlane.beat-=1;
+                    if (boosPlane.beat<=0){
+                        boosPlane.setAlive(false);
+                        Data.hasBoos=false;
+                        Data.score+=3000;
+                    }
+                }
+            }
+        }
     }
 
     private void gameFailure(){
@@ -241,7 +295,7 @@ public class MapCanvas extends Canvas implements Runnable {
     public void run() {
         while(running){
             move();
-            if (enemyPlanes.size()==0&&Data.score>=Data.targetScore){
+            if (enemyPlanes.size()==0&&(Data.score>=Data.targetScore||(Data.hasBoos==false&&boosPlane.isAlive()==false))){
                 playMusic("static/music/victory.wav");
                 JOptionPane.showMessageDialog(null,"恭喜通关!","提示",JOptionPane.INFORMATION_MESSAGE);
                 stop();
@@ -297,5 +351,13 @@ public class MapCanvas extends Canvas implements Runnable {
 
     public void setTargetScore(int targetScore){
         Data.targetScore=targetScore;
+    }
+
+    public void setBoosPlaneAddress(String boosPlaneAddress) {
+        this.boosPlaneAddress = boosPlaneAddress;
+    }
+
+    public void setBoosPlaneBulletAddress(String boosPlaneBulletAddress) {
+        this.boosPlaneBulletAddress = boosPlaneBulletAddress;
     }
 }

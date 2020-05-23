@@ -43,6 +43,7 @@ public class EnemyPlane extends Plane {
             bullets.add(new Bullet(getBulletAddress(), getX() + 20, getY()));
         }
     }
+
     public void move(){
         setY(getY()+getStep());
     }
