@@ -22,6 +22,8 @@ public class UserDao {
             ResultSet resultSet=statement.executeQuery();
             if (resultSet.next()){
                 user=new User(resultSet.getString("account"),resultSet.getString("password"));
+                user.setUserPlaneAddress(resultSet.getString("user_plane_address"));
+                user.setUserBulletAddress(resultSet.getString("user_bullet_address"));
                 user.setCoin(resultSet.getInt("coin"));
             }
             resultSet.close();
@@ -60,11 +62,14 @@ public class UserDao {
         }
     }
     public static void update(User user){
-        String sql="update user set coin=? where account=?";
+        String sql="update user set coin=?,user_plane_address=?,user_bullet_address=? where account=?";
         PreparedStatement statement=DButil.getPreparedStatement(sql);
         try {
             statement.setInt(1,user.getCoin());
-            statement.setString(2,user.getName());
+
+            statement.setString(2,user.getUserPlaneAddress());
+            statement.setString(3,user.getUserBulletAddress());
+            statement.setString(4,user.getName());
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

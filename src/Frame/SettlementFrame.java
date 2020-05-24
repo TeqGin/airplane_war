@@ -10,11 +10,11 @@ public class SettlementFrame extends JFrame {
     private String backgroundAddress;
     public SettlementFrame(String title,String backgroundAddress) throws HeadlessException {
         super(title);
+        this.setResizable(false);
         this.backgroundAddress=backgroundAddress;
         SettlementCanvas settlementCanvas=new SettlementCanvas(this,backgroundAddress);
 
         this.getContentPane().add(settlementCanvas);
-
 
         this.setVisible(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

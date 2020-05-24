@@ -35,6 +35,9 @@ public class UserService {
     public static void addUser(String account,String password){
         UserDao.addUser(account,password);
     }
+    public static void addUser(String account,String password,int coin){
+        UserDao.addUser(account,password,coin);
+    }
     public static User findUserById(String id){
         return UserDao.findUserById(id);
     }

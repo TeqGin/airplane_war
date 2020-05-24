@@ -24,4 +24,8 @@ public class BasicIcon extends Rectangle {
     public void setImage(Image image) {
         this.image = image;
     }
+
+    public String getAddress() {
+        return address;
+    }
 }

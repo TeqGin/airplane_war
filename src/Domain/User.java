@@ -9,6 +9,8 @@ public class User {
     private String name;
     private String password;
     private int coin;
+    private String userPlaneAddress;
+    private String userBulletAddress;
 
     public User() {
     }
@@ -47,5 +49,21 @@ public class User {
 
     public void setCoin(int coin) {
         this.coin = coin;
+    }
+
+    public String getUserPlaneAddress() {
+        return userPlaneAddress;
+    }
+
+    public void setUserPlaneAddress(String userPlaneAddress) {
+        this.userPlaneAddress = userPlaneAddress;
+    }
+
+    public String getUserBulletAddress() {
+        return userBulletAddress;
+    }
+
+    public void setUserBulletAddress(String userBulletAddress) {
+        this.userBulletAddress = userBulletAddress;
     }
 }

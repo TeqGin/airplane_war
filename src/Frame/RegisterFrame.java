@@ -152,7 +152,13 @@ public class RegisterFrame extends JFrame {
                 String passwordToConfirmString=String.valueOf(passwordFieldToConfirm.getPassword());
 
                 if (UserService.isLegal(accountString,passwordString,passwordToConfirmString)){
-                    UserService.addUser(accountString,passwordString);
+                    UserService.addUser(accountString,passwordString,0);
+                    Data.user=UserService.findUserById(accountString);
+
+                    Data.user.setUserPlaneAddress(Data.userPlaneAddress);
+                    Data.user.setUserBulletAddress(Data.userPlaneBulletAddress);
+
+                    UserService.update(Data.user);
                     JOptionPane.showMessageDialog(null,"注册成功!","提示",JOptionPane.INFORMATION_MESSAGE);
                     RegisterFrame.this.dispose();
                     LoginFrame loginFrame=new LoginFrame("注册界面");

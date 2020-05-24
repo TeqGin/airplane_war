@@ -1,15 +1,11 @@
 package Frame;
 
 import Domain.Data;
-import Canvas.MapCanvas;
-import Domain.NumberIcon;
-import Service.UserService;
 
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 
 /**
  * @author 许达峰
@@ -30,6 +26,12 @@ public class MainFrame extends JFrame {
         //set unable to change the size
         this.setResizable(false);
         Data.backgroundMusic.changeMusic("static/music/bgm_3.wav");
+        if (!"".equals(Data.user.getUserPlaneAddress())&&Data.user.getUserPlaneAddress()!=null){
+            Data.userPlaneAddress=Data.user.getUserPlaneAddress();
+        }
+        if (!"".equals(Data.user.getUserBulletAddress())&&Data.user.getUserBulletAddress()!=null){
+            Data.userPlaneBulletAddress=Data.user.getUserBulletAddress();
+        }
 
         ImageIcon icon=new ImageIcon("static/image/map/bg_cloud.jpg");
         JLabel mainBackground=new JLabel(icon);
@@ -79,11 +81,11 @@ public class MainFrame extends JFrame {
     private void addPlaneStrongButton(){
 
         JLabel planeStrong=new JLabel(new ImageIcon("static/image/icon/strong_plane.png"));
-        JLabel choosePlane=new JLabel(new ImageIcon("static/image/icon/arms_level_up.png"));
+        JLabel armsStrong=new JLabel(new ImageIcon("static/image/icon/arms_level_up.png"));
 
         JPanel planeStrongPanel=new JPanel();
 
-        planeStrongPanel.add(choosePlane);
+        planeStrongPanel.add(armsStrong);
         planeStrongPanel.add(planeStrong);
 
         planeStrongPanel.setBounds((int)(Data.width*0.3),350,200,400);
@@ -98,10 +100,21 @@ public class MainFrame extends JFrame {
             }
         });
 
-        choosePlane.addMouseListener(new MouseInputAdapter() {
+        armsStrong.addMouseListener(new MouseInputAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
+                MainFrame.this.dispose();
+                ArmsStrongFrame armsStrongFrame =new ArmsStrongFrame("static/image/map/bg_settlement.jpg");
+            }
+        });
+
+        planeStrong.addMouseListener(new MouseInputAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                MainFrame.this.dispose();
+                PlaneStrongFrame planeStrongFrame=new PlaneStrongFrame();
             }
         });
 
@@ -134,6 +147,22 @@ public class MainFrame extends JFrame {
         aboutPanel.add(about);
         aboutPanel.setOpaque(false);
         aboutPanel.setBounds(320,580,200,200);
+
+        about.addMouseListener(new MouseInputAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                String message="版本信息：1.0.0\n" +
+                        "作者：许达峰\n" +
+                        "完成时间：2020.5.24" +
+                        "游戏介绍：\n" +
+                        "使用上下左右键进行操控飞机飞行，\n" +
+                        "游戏过程中可按下空格键暂停游戏。\n" +
+                        "开始游戏时请使用鼠标点击一下游戏屏幕以使得飞机飞行\n" +
+                        "游戏愉快！";
+                JOptionPane.showMessageDialog(null,message,"关于与帮助",JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
 
         container.add(aboutPanel);
     }

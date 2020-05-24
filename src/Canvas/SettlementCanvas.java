@@ -13,6 +13,10 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
+/**
+ * @author 许达峰
+ * */
+
 public class SettlementCanvas extends Canvas {
     private MyMap settlementMap;
     private Image settlementImage;
