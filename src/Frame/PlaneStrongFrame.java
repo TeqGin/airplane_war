@@ -51,6 +51,7 @@ public class PlaneStrongFrame extends JFrame implements Runnable {
         backIcon=new BasicIcon("static/image/icon/back_menu.png",100,570);
         stoneIcon=new BasicIcon("static/image/icon/stone.png",440,50);
         background=new BasicIcon("static/image/map/bg_settlement.jpg",0,0);
+        new Thread(this).start();
     }
 
     public void paint(Graphics g){
@@ -88,7 +89,14 @@ public class PlaneStrongFrame extends JFrame implements Runnable {
 
     @Override
     public void run() {
-
+        while(true){
+            repaint();
+            try {
+                Thread.sleep(30);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void click(){
