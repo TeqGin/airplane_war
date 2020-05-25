@@ -4,6 +4,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.Rectangle;
 
+/**
+ * @author 许达峰
+ * beacuse the image cannot get the image's height and width ,so i write a extra class to get image's width and height
+ * */
 public class BasicIcon extends Rectangle {
     private String address;
     private Image image;

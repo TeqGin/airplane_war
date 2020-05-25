@@ -5,20 +5,21 @@ import Utils.MusicUtil;
 /**
  * @author 许达峰
  * @time 2020.5.14
+ * some basic information about the game
  * */
 
 public class Data {
     public static User user;
+    //the screen's width and height
     public static int width;
     public static int height;
+    //the screen's position
     public static int x=450;
     public static int y=25;
-    //audio track 1
-    public static MusicUtil backgroundMusic;
-    public static MusicUtil backgroundMusic2=new MusicUtil();
     //sleep time
     public static int speed=30;
 
+    //enemy number+1
     public static int enemyNumber=2;
     public static int nowCheckPoint=1;
 
@@ -26,6 +27,11 @@ public class Data {
     public static int targetScore=10000;
     public static int enemyType=2;
     public static int enemyBulletType=2;
+    //audio track 1
+    public static MusicUtil backgroundMusic;
+    //audio track 2
+    public static MusicUtil backgroundMusic2=new MusicUtil();
+
 
     public static long enterTime;
     public static long duration=30000;

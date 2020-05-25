@@ -41,7 +41,9 @@ public class GameFrame extends JFrame {
         mapCanvas.setUserPlaneBulletsAddress(userPlaneBulletAddress);
         mapCanvas.setBoosPlaneAddress(boosPlaneAddress);
         mapCanvas.setBoosPlaneBulletAddress(boosPlaneBulletAddress);
+
         mapCanvas.reset();
+
         add(mapCanvas);
         new Thread(mapCanvas).start();
     }

@@ -34,6 +34,8 @@ public class CheckPointFrame extends JFrame {
 
         addBackButton();
 
+        //in fact those code can use `for` to generate
+
         level1=new JLabel(new ImageIcon("static/image/icon/1_level.png"));
         level2=new JLabel(new ImageIcon("static/image/icon/2_level.png"));
         level3=new JLabel(new ImageIcon("static/image/icon/3_level.png"));
@@ -52,12 +54,14 @@ public class CheckPointFrame extends JFrame {
                 gameFrame.setMapAddress(Data.mapAddress);
                 gameFrame.setUserPlaneAddress(Data.userPlaneAddress);
                 gameFrame.setUserPlaneBulletAddress(Data.userPlaneBulletAddress);
+
                 Data.enemyNumber=2;
                 Data.targetScore=10000;
                 Data.speed=30;
                 Data.hasBoos=false;
                 Data.enemyType=2;
                 Data.enemyBulletType=2;
+
                 gameFrame.initCanvas();
             }
         });
@@ -73,6 +77,7 @@ public class CheckPointFrame extends JFrame {
                 gameFrame.setUserPlaneBulletAddress(Data.userPlaneBulletAddress);
                 gameFrame.setBoosPlaneAddress("static/image/plane/boss_1.png");
                 gameFrame.setBoosPlaneBulletAddress("static/image/bullet/enemy_bullet_2.png");
+
                 Data.enemyNumber=3;
                 Data.targetScore=15000;
                 Data.speed=30;
@@ -80,6 +85,7 @@ public class CheckPointFrame extends JFrame {
                 Data.proportion=0.55f;
                 Data.enemyType=4;
                 Data.enemyBulletType=3;
+
                 gameFrame.initCanvas();
             }
         });
@@ -108,6 +114,7 @@ public class CheckPointFrame extends JFrame {
         this.setLayout(null);
     }
 
+    //add back button
     private void addBackButton(){
         JPanel backPanel=new JPanel();
         JLabel back=new JLabel(new ImageIcon("static/image/icon/back_menu.png"));

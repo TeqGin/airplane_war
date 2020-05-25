@@ -13,22 +13,37 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
+
+/**
+ * @author 许达峰
+ * this class is to draw dynamic elements of arms
+ * */
+
 public class ArmsStrongCanvas extends Canvas implements Runnable {
+
     private ArrayList<String> stringArrayList=new ArrayList<String>();
     private ArrayList<ArrayList<Bullet>> bullets=new ArrayList<ArrayList<Bullet>>();
+    private ArrayList<NumberIcon> numberIcons=new ArrayList<NumberIcon>();
+
+    //icons
     private BasicIcon backIcon;
     private BasicIcon buyIcon;
     private BasicIcon stoneIcon;
+
     private Image backgroundImage;
     private Image nextImage,beforeImage;
-    private int page=1;
-    private ArrayList<NumberIcon> numberIcons=new ArrayList<NumberIcon>();
+
     private JFrame jFrame;
 
+    //record the current page
+    private int page=1;
+    //record the current page has how many arms
     private int number=0;
 
+    //double buffer
     private Image iBuffer;
     private Graphics gBuffer;
+
     public ArmsStrongCanvas(String backgroundAddress, JFrame jFrame) {
         this.jFrame=jFrame;
         //find all user bullet types
@@ -41,6 +56,7 @@ public class ArmsStrongCanvas extends Canvas implements Runnable {
         nextImage=Toolkit.getDefaultToolkit().getImage("static/image/icon/next.png");
         beforeImage=Toolkit.getDefaultToolkit().getImage("static/image/icon/before.png");
 
+        //load the address of bullets
         for (int i = 0; i < stringArrayList.size(); i++) {
             ArrayList<Bullet>bulletArrayList=new ArrayList<Bullet>();
             Bullet bullet=new Bullet(stringArrayList.get(i),200,100+(i%4)*100);
@@ -57,6 +73,7 @@ public class ArmsStrongCanvas extends Canvas implements Runnable {
             numberIcons.add(numberIcon);
         }
 
+        //touch of the click event when you click the buy or back or next or before image
         click();
         backIcon=new BasicIcon("static/image/icon/back_menu.png",100,570);
         buyIcon=new BasicIcon("static/image/icon/buy.png",300,100);
@@ -70,6 +87,7 @@ public class ArmsStrongCanvas extends Canvas implements Runnable {
             gBuffer=iBuffer.getGraphics();
         }
 
+        //reset the brush
         gBuffer.fillRect(0,0,Data.width,Data.height);
 
         gBuffer.drawImage(backgroundImage,0,0,Data.width,Data.height,this);
@@ -79,16 +97,20 @@ public class ArmsStrongCanvas extends Canvas implements Runnable {
                 drawBullet(gBuffer,bullets.get(i).get(j));
             }
         }
+        //except the first page ,all the pages has the before page
         if (page!=1){
             gBuffer.drawImage(beforeImage,0,570,this);
         }
+        //to judge if the current page has the next page, every page can put max four items,
         if (page*4<stringArrayList.size()){
             gBuffer.drawImage(nextImage,430,570,this);
         }
         drawScore(gBuffer);
+
         gBuffer.drawImage(backIcon.getImage(),backIcon.x,backIcon.y,this);
         gBuffer.drawImage(stoneIcon.getImage(),stoneIcon.x,stoneIcon.y,this);
 
+        //to judge the current page has how many items
         if (page*4<=stringArrayList.size()){
             number=4;
         }else {
@@ -122,6 +144,7 @@ public class ArmsStrongCanvas extends Canvas implements Runnable {
         gBuffer.drawImage(bullet.getBulletImage(),bullet.getX(),bullet.getY(),this);
     }
 
+    //the moving of bullets
     private void move(){
         for (int i = 0; i < bullets.size(); i++) {
             for (int j = 0; j < bullets.get(i).size(); j++) {
@@ -139,6 +162,7 @@ public class ArmsStrongCanvas extends Canvas implements Runnable {
         repaint();
     }
 
+    //click event
     private void click(){
         this.addMouseListener(new MouseInputAdapter() {
             @Override

@@ -23,8 +23,11 @@ public class ArmsStrongFrame extends JFrame  {
         this.backgroundAddress=backgroundAddress;
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(false);
+
         ArmsStrongCanvas armsStrongCanvas =new ArmsStrongCanvas(backgroundAddress,this);
+        //remember add the canvas to this
         add(armsStrongCanvas);
+
         new Thread(armsStrongCanvas).start();
     }
 

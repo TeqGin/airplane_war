@@ -16,21 +16,29 @@ import java.util.Random;
 /**
  * @author 许达峰
  * @time 2020.5.17
+ *  This class is to draw the dynamic game body include score ,enemy ,user plane ,bullets and the rolling background
+ *  this class also bind the press on space to the keyboard event which to stop and start the game
  * */
 
 public class MapCanvas extends Canvas implements Runnable {
 
+    //some address of pictures
     private String MapAddress;
-    private boolean running=true;
-    private MyMap map1,map2;
-    private UserPlane userPlane;
-    private ArrayList<EnemyPlane> enemyPlanes=new ArrayList<EnemyPlane>();
-    private BoosPlane boosPlane;
-    private JFrame jFrame;
     private String userPlaneAddress;
     private String userPlaneBulletsAddress;
     private String boosPlaneAddress;
     private String boosPlaneBulletAddress;
+
+    private boolean running=true;
+
+    private MyMap map1,map2;
+
+    private UserPlane userPlane;
+    private BoosPlane boosPlane;
+
+    private JFrame jFrame;
+    private ArrayList<EnemyPlane> enemyPlanes=new ArrayList<EnemyPlane>();
+
 
     //instance double buffer 实现双缓冲
     private Image iBuffer;
@@ -44,7 +52,8 @@ public class MapCanvas extends Canvas implements Runnable {
         map1=new MyMap(this.MapAddress,0,0);
         map2=new MyMap(this.MapAddress,0,-Data.height);
         //user plane
-        enemyPlanes.add(new EnemyPlane("static/image/plane/enemy_0.png","static/image/bullet/enemy_bullet_1.png"));
+        enemyPlanes.add(new EnemyPlane("static/image/plane/enemy_0.png",
+                                  "static/image/bullet/enemy_bullet_1.png"));
         //initialize numbers
         for (int i = 0; i < 10 ; i++) {
             NumberIcon numberIcon=new NumberIcon("static/image/number/number_"+i+".png");
@@ -56,7 +65,7 @@ public class MapCanvas extends Canvas implements Runnable {
         }
         //reset the score
         Data.score=0;
-
+        //add keyboard event to start and stop the game
         this.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -76,6 +85,7 @@ public class MapCanvas extends Canvas implements Runnable {
         this.setBounds(0,0,Data.width,Data.height);
     }
 
+    //use this function to reset some parameters
     public void reset(){
 
         userPlane=new UserPlane(225,500,userPlaneAddress,Data.userPlaneBulletAddress);
@@ -85,7 +95,7 @@ public class MapCanvas extends Canvas implements Runnable {
         Data.enterTime=System.currentTimeMillis();
     }
 
-
+    //to reset element moving speed
     public void setSpeed(int speed){
         Data.speed=speed;
     }
@@ -109,9 +119,14 @@ public class MapCanvas extends Canvas implements Runnable {
         //draw user bullets
         userPlane.drawBullet(gBuffer,this);
 
-        if (Data.hasBoos&&System.currentTimeMillis()-Data.enterTime>=Data.duration&&boosPlane.isAlive()) {
+        //if current stage will be appear boos,after user enter the game a few seconds,stop generate new enemy and generate boos
+        if (    Data.hasBoos
+                &&System.currentTimeMillis()-Data.enterTime>=Data.duration
+                &&boosPlane.isAlive()) {
             Data.enemyNumber=1;
+            //draw boos
             gBuffer.drawImage(boosPlane.getPlanePicture(),boosPlane.getX(),boosPlane.getY(),this);
+            //draw boos's bullets
             for (int i = 0; i <boosPlane.bullets.size() ; i++) {
                 for (int j = 0; j < boosPlane.bullets.get(i).size(); j++) {
                     Bullet bullet=boosPlane.bullets.get(i).get(j);
@@ -153,7 +168,7 @@ public class MapCanvas extends Canvas implements Runnable {
         }
     }
 
-    //move the screen
+    //move the screen and  use the `synchronized` to carry out codes  at the same time
     private synchronized void move(){
         mapMove();
         //judge if happened collision
@@ -171,24 +186,31 @@ public class MapCanvas extends Canvas implements Runnable {
         repaint();
     }
 
+    //move the enemy plane and generate new plane
     private void enemyMove(){
         for (int i = 0; i < enemyPlanes.size(); i++) {
             enemyPlanes.get(i).move();
-            if (enemyPlanes.get(i).isAlive()==false||enemyPlanes.get(i).getY()>Data.height){
+            //if enemy plane is death and enemy is out of the screen,remove the plane
+            if (enemyPlanes.get(i).isAlive()==false
+                    ||enemyPlanes.get(i).getY()>Data.height){
                 enemyPlanes.remove(enemyPlanes.get(i));
             }
         }
+        //generate new plane for enemy every a few seconds later
         long now_time = System.currentTimeMillis();
         //if there is no any  bullet in the arrayList or every few milliseconds(after last bullet shoot)
         long appearInterval=400;
-        if (enemyPlanes.size() == 0 || now_time - enemyPlanes.get(enemyPlanes.size() - 1).getAppearTime() >= appearInterval) {
+        if (enemyPlanes.size() == 0
+                || now_time - enemyPlanes.get(enemyPlanes.size() - 1).getAppearTime() >= appearInterval) {
             for (int i = 0; i <new Random().nextInt(Data.enemyNumber) ; i++) {
                 int r=new Random().nextInt(Data.enemyBulletType);
+                //generate new enemy by random type
                 enemyPlanes.add(new EnemyPlane("static/image/plane/enemy_"+new Random().nextInt(Data.enemyType)+".png","static/image/bullet/enemy_bullet_"+r+".png"));
             }
         }
     }
 
+    //the impact check algorithm by using rectangle
     private void collision(){
         //use bullet and enemy impact checking
         ArrayList<Bullet> userBullets=userPlane.getUserBullets();
@@ -197,16 +219,20 @@ public class MapCanvas extends Canvas implements Runnable {
                 //System class Rectangle has the impact checking function
                 if (new Rectangle(userBullets.get(i).getX(),userBullets.get(i).getY(),userBullets.get(i).getWidth(),userBullets.get(i).getHeight()).intersects(
                         new Rectangle(enemyPlanes.get(j).getX(),enemyPlanes.get(j).getY(),enemyPlanes.get(j).getWidth(),enemyPlanes.get(j).getHeight())
-                    )
-                ){
+                    )){
+                    //play music
                     playMusic("static/music/bloom.wav");
+                    //set the status
                     userBullets.get(i).setExist(false);
                     enemyPlanes.get(j).setAlive(false);
+                    //get more score
                     Data.score+=100;
                     if (Data.score==5000){
+                        //speed up and generate more enemy
                         Data.speed/=2;
                         Data.enemyNumber+=1;
                     }
+                    //after you get enough score stop generate new plane,actually the enemy number is zero
                     if(Data.score==Data.targetScore){
                         Data.enemyNumber=1;
                     }
@@ -230,7 +256,6 @@ public class MapCanvas extends Canvas implements Runnable {
         //enemy bullets and user plane impact checking
         for (int i = 0; i < enemyPlanes.size(); i++) {
             ArrayList<Bullet> enemyBullets=enemyPlanes.get(i).getBullets();
-
             for (int j = 0; j < enemyBullets.size(); j++) {
                 if (new Rectangle(userPlane.getX(),userPlane.getY(),userPlane.getWidth(),userPlane.getHeight()).intersects(
                         new Rectangle(enemyBullets.get(j).getX(),enemyBullets.get(j).getY(),enemyBullets.get(j).getWidth(),enemyBullets.get(j).getHeight())
@@ -240,12 +265,16 @@ public class MapCanvas extends Canvas implements Runnable {
             }
         }
 
-        if (Data.hasBoos&&System.currentTimeMillis()-Data.enterTime>=Data.duration&&boosPlane.isAlive()){
+        //if the current stage has a boos ,and after the boos appear and the boos is alive,the do the impact check
+        if (Data.hasBoos
+                &&System.currentTimeMillis()-Data.enterTime>=Data.duration
+                &&boosPlane.isAlive()){
             if (new Rectangle(boosPlane.getX(),boosPlane.getY(),boosPlane.getWidth(),boosPlane.getHeight()).intersects(
                     new Rectangle(userPlane.getX(),userPlane.getY(),userPlane.getWidth(),userPlane.getHeight()
             ))){
                 gameFailure();
             }
+            //do the impact check between boos's bullets and user's plane
             for (int i = 0; i < boosPlane.bullets.size(); i++) {
                 for (int j = 0; j <boosPlane.bullets.get(i).size() ; j++) {
                     Bullet bullet=boosPlane.bullets.get(i).get(j);
@@ -256,6 +285,7 @@ public class MapCanvas extends Canvas implements Runnable {
                     }
                 }
             }
+            //do the impact check between user's bullets and boos plane ,and only user's bullets hit the boos enough time,the boos will dead
             userBullets=userPlane.getUserBullets();
             for (int i = 0; i <userBullets.size() ; i++) {
                 if (new Rectangle(userBullets.get(i).getX(),userBullets.get(i).getY(),userBullets.get(i).getWidth(),userBullets.get(i).getHeight()).intersects(
@@ -264,6 +294,7 @@ public class MapCanvas extends Canvas implements Runnable {
                 ){
                     playMusic("static/music/bloom.wav");
                     userBullets.get(i).setExist(false);
+                    //every time user's bullet hit the boos ,the boos's live become less
                     boosPlane.beat-=1;
                     if (boosPlane.beat<=0){
                         boosPlane.setAlive(false);
@@ -278,10 +309,13 @@ public class MapCanvas extends Canvas implements Runnable {
     private void gameFailure(){
         playMusic("static/music/bloom.wav");
         userPlane.setAlive(false);
+        //stop the thread
         stop();
         playMusic("static/music/game_over.wav");
         JOptionPane.showMessageDialog(null,"游戏结束!","提示",JOptionPane.INFORMATION_MESSAGE);
+        //destroy the frame
         jFrame.dispose();
+        //into settlement frame
         SettlementFrame settlementFrame =new SettlementFrame("结算面板","static/image/map/settlement_failure.png");
     }
 
@@ -295,7 +329,10 @@ public class MapCanvas extends Canvas implements Runnable {
     public void run() {
         while(running){
             move();
-            if (enemyPlanes.size()==0&&(Data.score>=Data.targetScore||(Data.hasBoos==false&&boosPlane.isAlive()==false))){
+            //if the current stage has no boos ,the after you get enough score and the screen has no any enemy,you pass the stage
+            //if the current stage has a boos ,as long as you kill boss ,you pass the stage
+            if (enemyPlanes.size()==0&&(Data.score>=Data.targetScore
+                    ||(Data.hasBoos==false&&boosPlane.isAlive()==false))){
                 playMusic("static/music/victory.wav");
                 JOptionPane.showMessageDialog(null,"恭喜通关!","提示",JOptionPane.INFORMATION_MESSAGE);
                 stop();

@@ -10,6 +10,8 @@ import java.sql.SQLException;
 /**
  * @author 许达峰
  * @time 2020.5.14
+ * this class is to operate the database
+ * and it shouldn't be static
  * */
 
 public class UserDao {

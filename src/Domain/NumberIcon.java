@@ -3,6 +3,11 @@ package Domain;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * @author 许达峰
+ * this clas and the BasicIcon is redundancy
+ * */
+
 public class NumberIcon {
     private String address;
     private Image numberImage;

@@ -8,6 +8,7 @@ import java.awt.event.MouseEvent;
 /**
  * @author 许达峰
  * @time 2020.5.14
+ * Abandoned
  * */
 
 public class TripsDialog extends JDialog  {

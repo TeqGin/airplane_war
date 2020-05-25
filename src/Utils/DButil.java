@@ -7,6 +7,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
 
+/**
+ * this class is use for connect mysql
+ * */
+
 //数据库资源管理工具
 public class DButil {
     

@@ -39,7 +39,8 @@ public class EnemyPlane extends Plane {
         long now_time = System.currentTimeMillis();
         //if there is no any  bullet in the arrayList or every few milliseconds(after last bullet shoot)
         long shootInterval=1000;
-        if (bullets.size() == 0 || now_time - bullets.get(bullets.size() - 1).getShootTime() >= shootInterval) {
+        if (bullets.size() == 0
+                || now_time - bullets.get(bullets.size() - 1).getShootTime() >= shootInterval) {
             bullets.add(new Bullet(getBulletAddress(), getX() + 20, getY()));
         }
     }
