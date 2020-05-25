@@ -31,7 +31,7 @@ public class DButil {
     //实例化数据库连接conn
     public static Connection getConnection() {
         try {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/airplane_war?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8&useSSL=false", "root", "60870736a");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/airplane_war?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8&useSSL=false", "xxx", "xxx");
         } catch (SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
